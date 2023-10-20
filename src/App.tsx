@@ -19,9 +19,11 @@ function App() {
   const handleSubmit = (e:any) => {
     e.preventDefault();
     const data = new FormData();
-    if ( !file ) toast.warn('You have to select video file first')
+    if ( !file ) {
+      toast.warn('You have to select video file first');
+      return;
+    }
     data.append('file', file);
-
     fetch('http://localhost:8000/upload', {
       method: 'POST',
       body: data,
