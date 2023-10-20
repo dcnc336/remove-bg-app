@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { REACT_APP_BACKENT_API } from './costant';
+import { REACT_APP_BACKENT_API } from './constant';
 
 function App() {
 
