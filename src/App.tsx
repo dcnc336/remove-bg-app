@@ -1,21 +1,35 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import './App.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { REACT_APP_BACKENT_API } from './constant';
+
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 
 function App() {
 
   const inputRef = useRef<HTMLInputElement|null>(null);
   const [file, setFile] = useState<any>(null);
+  const [filename, setFilename] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const allVideos = '.mp4';
   const handleSelect = () => {
     inputRef.current?.click();
   }
+
+  useEffect(() => {
+    if ( file ) {
+      setFilename(file.name);
+    }
+  },[file])
   
   const handleInputChange = (e:any) => {
     setFile(e.target.files[0]);
+  }
+  const downloadVideo = (url: string) => {
+    const ele = document.createElement('a');
+    ele.href = url;
+    ele.setAttribute('download', 'true');
+    ele.click();
   }
   const handleSubmit = (e:any) => {
     e.preventDefault();
@@ -29,8 +43,9 @@ function App() {
     fetch(`${REACT_APP_BACKENT_API}:8000/upload`, {
       method: 'POST',
       body: data,
-    }).then( async (res) => {
-      console.log(res);
+    }).then(bb =>  bb.blob()).then( async (res) => {
+      const blobURL = URL.createObjectURL(res);
+      downloadVideo(blobURL);
       toast.success('Background is removed successfully');
       setLoading(false);
     }).catch(err => {
@@ -56,8 +71,10 @@ function App() {
           <span className="sr-only">Loading...</span>
         </div>:<div>
           <div>
-            <label className='text-2xl text-teal-900'>Please select video file:</label>
-            <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:outline-none font-medium rounded-lg text-sm px-7 py-2 text-center mr-2 mb-2 ml-2" onClick={handleSelect}>Select</button>
+            <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:outline-none font-medium rounded-lg text-sm px-7 py-2 text-center mr-2 mb-2 ml-2" onClick={handleSelect}>Select Video</button>
+            {
+              filename.trim().length > 0 &&  <span className='text-2xl font-bold text-slate-900'>{filename}</span>
+            }
             <input type='file' name='file' className='hidden' accept={allVideos} ref={inputRef} onChange={handleInputChange}/>
           </div>
           <div>
