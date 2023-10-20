@@ -1,0 +1,5 @@
+const REACT_APP_BACKENT_API='http://52.14.168.11';
+
+export {
+    REACT_APP_BACKENT_API
+}

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { REACT_APP_BACKENT_API } from './costant';
 
 function App() {
 
@@ -15,7 +16,6 @@ function App() {
   const handleInputChange = (e:any) => {
     setFile(e.target.files[0]);
   }
-
   const handleSubmit = (e:any) => {
     e.preventDefault();
     const data = new FormData();
@@ -24,7 +24,7 @@ function App() {
       return;
     }
     data.append('file', file);
-    fetch('http://localhost:8000/upload', {
+    fetch(`${REACT_APP_BACKENT_API}:8000/upload`, {
       method: 'POST',
       body: data,
     }).then( async (res) => {
